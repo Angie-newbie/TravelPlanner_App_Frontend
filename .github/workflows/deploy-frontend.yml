@@ -1,0 +1,47 @@
+name: Deploy Frontend to AWS ECS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout frontend code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set backend URL environment variable
+        run: echo "REACT_APP_BACKEND_URL=${{ secrets.BACKEND_URL }}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build frontend app with backend URL
+        run: npm run build
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push frontend image
+        run: |
+          docker build -t frontend .
+          docker tag frontend:latest ${{ secrets.ECR_REPOSITORY }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY }}:latest
+
+      - name: Deploy frontend service to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          service: ${{ secrets.ECS_SERVICE }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
+          task-definition: ${{ secrets.TASK_DEFINITION }}
+          wait-for-service-stability: true
