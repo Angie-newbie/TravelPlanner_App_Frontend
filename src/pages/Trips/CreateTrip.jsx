@@ -43,7 +43,7 @@ export default function CreateTrip() {
     // Retrieve token to authorise trip creation
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3000/trips', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/trips`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${getToken()}`,

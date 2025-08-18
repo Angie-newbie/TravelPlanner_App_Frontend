@@ -66,7 +66,7 @@ function ExpenseEditWindow({ expense, tripId, expenses, onClose, onSave }) {
   useEffect(() => {
     const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:3000/categories", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/categories`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const data = await res.json();
@@ -115,8 +115,8 @@ function ExpenseEditWindow({ expense, tripId, expenses, onClose, onSave }) {
     try {
       const method = isEditMode ? 'PUT' : 'POST';
       const url = isEditMode
-        ? `http://localhost:3000/expenses/${expense._id}`
-        : `http://localhost:3000/expenses`;
+        ? `${import.meta.env.VITE_API_URL}/expenses/${expense._id}`
+        : `${import.meta.env.VITE_API_URL}/expenses`;
 
       const body = {
         ...formData,
@@ -151,7 +151,7 @@ function ExpenseEditWindow({ expense, tripId, expenses, onClose, onSave }) {
     }
 
     try {
-      const categoryRes = await fetch("http://localhost:3000/categories", {
+      const categoryRes = await fetch(`${import.meta.env.VITE_API_URL}/categories`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +187,7 @@ function ExpenseEditWindow({ expense, tripId, expenses, onClose, onSave }) {
       }
 
     try {
-      const res = await fetch(`http://localhost:3000/categories/${categoryId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/categories/${categoryId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${getToken()}`

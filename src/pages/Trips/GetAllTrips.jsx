@@ -21,7 +21,7 @@ export default function GetAllTrips() {
   useEffect(() => {
     async function fetchTrips() {
       try {
-        const res = await fetch('http://localhost:3000/trips', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/trips`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${getToken()}`
@@ -78,7 +78,7 @@ export default function GetAllTrips() {
   // Using token authorise user to delete trip
   const handleDelete = async (tripId) => {
     try {
-      const res = await fetch(`http://localhost:3000/trips/${tripId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/trips/${tripId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${getToken()}`
